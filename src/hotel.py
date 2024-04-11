@@ -1,6 +1,8 @@
 from redis_om import EmbeddedJsonModel, Field, JsonModel, VectorFieldOptions
 from typing import List, Optional
 
+from src.config import vss_algorithm, vss_type, vss_dimension, vss_distance_metric
+
 
 class Contact(EmbeddedJsonModel):
     phone: str = Field(index=True)
@@ -20,8 +22,8 @@ class Hotel(JsonModel):
     reviews_positive: str = Field(index=True, full_text_search=True)
     reviews_negative: str = Field(index=True, full_text_search=True)
     embedding: List[float] = Field(index=True, vector_options=VectorFieldOptions(
-        algorithm=VectorFieldOptions.ALGORITHM.HNSW,
-        type=VectorFieldOptions.TYPE.FLOAT32,
-        dimension=384,  # Assuming a dimension of 384 as an example
-        distance_metric=VectorFieldOptions.DISTANCE_METRIC.COSINE,
+        algorithm=vss_algorithm,
+        type=vss_type,
+        dimension=vss_dimension,  # Assuming a dimension of 384 as an example
+        distance_metric=vss_distance_metric,
     ))

@@ -4,11 +4,13 @@ from hotel import Hotel, Contact
 from sentence_transformers import SentenceTransformer
 from redis_om import get_redis_connection, Migrator
 
+from src.config import vss_embedding_model
+
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
+model = SentenceTransformer(vss_embedding_model)
 redis = get_redis_connection()
 
 
