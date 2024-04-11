@@ -2,12 +2,13 @@ from faker import Faker
 import json
 import numpy as np
 
-fake = Faker()
+#fake = Faker('es_CL')
+fake = Faker('en_US')
 
 HOTEL_JSON_LIST_OUTPUT_FILE = '../../data/hotels_data_with_duplicates.json'
 HOTEL_JSON_LIST_FILE_MODE = 'w'
-HOTEL_JSON_LIST_UNIQUE_HOTELS = 25000
-HOTEL_JSON_LIST_VARIATIONS_OF_EACH_HOTEL = 4
+HOTEL_JSON_LIST_UNIQUE_HOTELS = 2500
+HOTEL_JSON_LIST_VARIATIONS_OF_EACH_HOTEL = 3
 
 
 # Function to create a hotel JSON object
@@ -22,7 +23,10 @@ def create_hotel():
         "amenities": amenities,
         "contact": {
             "phone": fake.phone_number(),
-            "email": fake.email()
+            "email": fake.email(),
+            "country_calling_code": fake.country_calling_code(),
+            "website": fake.uri(),
+            "contact_person": fake.name()
         },
         "rating": f"{np.random.randint(1, 6)} stars",
         "reviews": {
