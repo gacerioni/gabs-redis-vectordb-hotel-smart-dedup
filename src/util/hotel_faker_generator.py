@@ -41,30 +41,31 @@ def create_hotel():
 def create_hotel_variations(hotel, num_variations=HOTEL_JSON_LIST_VARIATIONS_OF_EACH_HOTEL):
     variations = [hotel]  # include the original hotel
     for _ in range(num_variations):
-        # Create a variation
         variation = hotel.copy()
-        variation['name'] = f"{variation['name']} {fake.random.choice(['Resort', 'Inn', 'Suites', 'Lodge'])}"
-        variation['address'] = fake.address().replace("\n", ", ")  # potentially change the address
-        variation['amenities'] = np.random.choice(variation['amenities'],
-                                                  size=np.random.randint(2, len(variation['amenities'])),
-                                                  replace=False).tolist()
+        variation_name_modifiers = ['Resort', 'Inn', 'Suites', 'Lodge', 'Place', 'BnB']
+        variation_modifier = fake.random.choice(variation_name_modifiers)
+        variation['name'] = f"{variation['name']} {variation_modifier}"
+
+        # Slightly modify amenities
+        if len(variation['amenities']) > 2:  # Ensure there are enough amenities to modify
+            dropped_amenity = variation['amenities'].pop(fake.random.randint(0, len(variation['amenities']) - 1))
+            new_amenity = fake.random.choice(["Spa", "Gym", "Pet Friendly", "Bar", "Airport Shuttle", "Breakfast"])
+            if new_amenity not in variation['amenities']:
+                variation['amenities'].append(new_amenity)
+
         variations.append(variation)
     return variations
 
 
 def main():
-    # Generate a base list of unique hotels
-    unique_hotels = [create_hotel() for _ in range(HOTEL_JSON_LIST_UNIQUE_HOTELS)]  # generate 30 unique hotels
+    unique_hotels = [create_hotel() for _ in range(HOTEL_JSON_LIST_UNIQUE_HOTELS)]
 
-    # Create variations for each hotel
     all_hotels = []
     for hotel in unique_hotels:
         all_hotels.extend(create_hotel_variations(hotel, num_variations=np.random.randint(1, 3)))
 
-    # Shuffle the list to mix up original and duplicate entries
     np.random.shuffle(all_hotels)
 
-    # Save the list to a JSON file
     with open(HOTEL_JSON_LIST_OUTPUT_FILE, HOTEL_JSON_LIST_FILE_MODE) as f:
         json.dump(all_hotels, f, indent=4)
 
@@ -73,5 +74,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
